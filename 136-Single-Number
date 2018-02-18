@@ -1,0 +1,74 @@
+'''
+Given an array of integers, every element appears twice
+except for one. Find that single one.
+
+Note:
+Your algorithm should have a linear runtime complexity.
+Could you implement it without using extra memory?
+'''
+
+# an XOR solution from other's, runtime O(N), space O(1)
+# learned sth new, XOR = exclusive or, sth to do with binary
+
+
+def singleNumber(self, nums):
+    res = 0
+    for num in nums:
+        res ^= num
+    return res
+
+
+'''
+# my 3rd solution, runtime 52ms (O(N)), space O(N)
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        dic = dict()
+
+        for x in nums:
+            dic[x] = dic.get(x, 0) + 1
+
+        for i in dic:
+            if dic[i] == 1:
+                return i
+'''
+
+
+'''
+# my 2nd solution, runtime 900ms
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+
+        while True:
+            num = nums.pop()
+            try:
+                nums.remove(num)
+            except:
+                return num
+'''
+
+'''
+# my 1st solution, runtime 1500ms
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        lst = list()
+
+        for x in nums:
+            if x in lst:
+                lst.remove(x)
+            else:
+                lst.append(x)
+
+        return lst.pop()
+'''
