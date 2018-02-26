@@ -1,0 +1,91 @@
+'''
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+'''
+
+
+# 3rd solution, after looking at other's. time = O(n), space = O(1)
+
+
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        ls2 = ls1 = 0
+
+        for x in nums:
+            ls = max(ls2 + x, ls1)
+            ls2 = ls1
+            ls1 = ls
+
+        return ls1
+
+
+'''
+a memoization solution
+class Solution:
+    def rob(self, nums):
+        memo = [None] * len(nums)
+        return Solution.rob2(nums, len(nums) - 1, memo)
+
+    def rob2(nums, i, memo):
+        if i < 0:
+            return 0
+        if memo[i] is not None:
+            return memo[i]
+
+        memo[i] = max(Solution.rob2(nums, i - 1, memo), Solution.rob2(nums, i - 2, memo) + nums[i])
+
+        return memo[i]
+'''
+
+'''
+# 2nd solution， time = O(n), space = O(n)
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        length = len(nums)
+        lst = []
+
+        if length == 0:
+            return 0
+
+        for i in range(length):
+            if i <= 1:
+                lst.append(max(nums[:i + 1]))
+            else:
+                lst.append(max(lst[i - 2] + nums[i], lst[i - 1]))
+
+        return lst.pop()
+'''
+
+'''
+# 1st solution, runtime 40ms (O(N)), space S(N)
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        lst = []
+        if len(nums) == 0:
+            return 0
+        elif len(nums) <= 2:
+            return max(nums)
+        elif len(nums) == 3:
+            return max(nums[0] + nums[2], nums[1])
+
+        lst.append(nums[0])
+        lst.append(nums[1])
+        lst.append(nums[0] + nums[2])
+        for i in range(3, len(nums)):
+            lst.append(max(nums[i] + lst[i - 2], nums[i] + lst[i - 3], lst[i - 1]))
+
+        return lst.pop()
+'''
