@@ -1,0 +1,94 @@
+'''
+On a staircase, the i-th step has some non-negative cost cost[i] assigned (0 indexed).
+
+Once you pay the cost, you can either climb one or two steps. You need to find minimum cost to reach the top of the floor, and you can either start from the step with index 0, or the step with index 1.
+
+Example 1:
+Input: cost = [10, 15, 20]
+Output: 15
+Explanation: Cheapest is start on cost[1], pay that cost and go to the top.
+
+Example 2:
+Input: cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
+Output: 6
+Explanation: Cheapest is start on cost[0], and only step on 1s, skipping cost[3].
+
+Note:
+cost will have a length in the range [2, 1000].
+Every cost[i] will be an integer in the range [0, 999].
+'''
+
+# a memoization solution based on the idea of 2nd solution
+class Solution:
+    def minCostClimbingStairs(self, cost):
+        memo = [None] * len(cost)
+
+        def min2(cost, i, memo):
+            if i < 0:
+                return 0
+
+            if memo[i] is not None:
+                return memo[i]
+            else:
+                memo[i] = cost[i] + min(min2(cost, i - 1, memo),
+                                        min2(cost, i - 2, memo))
+
+            return memo[i]
+
+        return min(min2(cost, len(cost) - 1, memo),
+                   min2(cost, len(cost) - 2, memo))
+
+
+'''
+3rd solution based on 2nd solution, but with O(1) space
+class Solution:
+    def minCostClimbingStairs(self, cost):
+
+        d1 = d2 = 0
+
+        for x in cost:
+            d = x + min(d1, d2)
+            d2 = d1
+            d1 = d
+
+        return min(d1, d2)
+'''
+
+'''
+# 2nd solution with the idea f(n) = cost[n] + min(f(n - 1), f(n - 2))
+# return min(f(n), f(n - 1))
+class Solution:
+    def minCostClimbingStairs(self, cost):
+        """
+        :type cost: List[int]
+        :rtype: int
+        """
+
+        d = {0: cost[0], 1: cost[1]}
+
+        for i in range(2, len(cost)):
+            d[i] = cost[i] + min(d[i - 1], d[i - 2])
+
+        return min(d[i - 1], d[i])
+'''
+
+
+'''
+# 1st solution, with the idea that f(n) = min(f(n-1), f(nmin) + cost(n))
+# but i'm not sure if my idea is correspond with the code
+class Solution:
+    def minCostClimbingStairs(self, cost):
+        """
+        :type cost: List[int]
+        :rtype: int
+        """
+
+        nmin = n1 = 0
+
+        for x in cost:
+            n = min(nmin + x, n1)
+            n1 = x + nmin
+            nmin = n
+
+        return nmin
+'''
