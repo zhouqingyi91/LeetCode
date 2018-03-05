@@ -1,0 +1,62 @@
+'''
+Reverse a singly linked list.
+'''
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+
+# a recursive solution going forward with the linked list
+
+
+class Solution:
+    def reverseList(self, head):
+        return self.reverse(head)
+
+    def reverse(self, head, prev_node=None):
+        if not head:
+            return prev_node
+
+        next_node = head.next
+        head.next = prev_node
+        prev_node = head
+
+        return self.reverse(next_node, prev_node)
+
+
+'''
+# a recursive solution going backward against the linked list
+class Solution:
+    def reverseList(self, head):
+        if not head or not head.next:
+            return head
+
+        last = self.reverseList(head.next)  # this eventually returns the last node
+        head.next.next = head  # adding a backward pointing pointer
+        head.next = None  # break the forward pointing pointer
+
+        return last # return the last node with backward pointing pointer
+'''
+
+'''
+# an iterative solution after watching other's thinking process
+class Solution:
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        prev_node = None
+        cur_node = head
+
+        while cur_node:
+            next_node = cur_node.next
+            cur_node.next = prev_node
+            prev_node = cur_node
+            cur_node = next_node
+
+        return prev_node
+'''
