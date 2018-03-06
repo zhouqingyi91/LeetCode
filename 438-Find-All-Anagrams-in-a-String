@@ -1,0 +1,84 @@
+# Question url: https://leetcode.com/problems/find-all-anagrams-in-a-string/description/
+
+# somebody's solution that i understand, O(n) time and O(1) space (if we exclude the return list)
+
+
+class Solution(object):
+    def findAnagrams(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: List[int]
+        """
+        res = []
+        n = len(s)
+        m = len(p)
+        phash = [0] * 123
+        shash = [0] * 123
+
+        if n < m:
+            return res
+
+        for x in p:
+            phash[ord(x)] += 1
+
+        for x in s[:m - 1]:
+            shash[ord(x)] += 1
+
+        for i in range(m - 1, n):
+            shash[ord(s[i])] += 1
+            if i - m >= 0:
+                shash[ord(s[i - m])] -= 1
+            if shash == phash:
+                res.append(i - m + 1)
+
+        return res
+
+
+'''
+# my 2nd solution with runtime 1655ms
+class Solution(object):
+    def findAnagrams(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: List[int]
+        """
+        lst = []
+        d = {}
+        reverp = p[::-1]
+
+        for j in range(len(p)):
+            d[p[j:] + p[:j]] = 1
+            d[reverp[j:] + reverp[:j]] = 1
+
+        for i in range(len(s) - len(p) + 1):
+            if s[i:i + len(p)] in d:
+                lst.append(i)
+
+        return lst
+'''
+
+'''
+# my 1st solution, time limit exceeded
+class Solution(object):
+    def findAnagrams(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: List[int]
+        """
+        lst = []
+        reverp = p[::-1]
+
+        for i in range(len(s) - len(p) + 1):
+            for j in range(len(p)):
+                if p[j:] + p[:j] == s[i:i + len(p)]:
+                    lst.append(i)
+                    break
+                if reverp[j:] + reverp[:j] == s[i:i + len(p)]:
+                    lst.append(i)
+                    break
+
+        return lst
+'''
