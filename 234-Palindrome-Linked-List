@@ -1,0 +1,47 @@
+# Question url: https://leetcode.com/problems/palindrome-linked-list/description/
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+
+# a solution by others comparing the reversed first half with the last half
+class Solution(object):
+    def isPalindrome(self, head):
+
+        rev = None
+        fast = slow = head
+
+        while fast and fast.next:
+            fast = fast.next.next
+            rev, rev.next, slow = slow, rev, slow.next  # reverse the first half
+
+        if fast:  # incase of odd numbered linked list
+            slow = slow.next
+
+        # compare reversed first half and last half
+        # rev is the reversed first half and slow is the ordered last half
+        while slow and slow.val == rev.val:
+            slow, rev = slow.next, rev.next
+
+        return not slow
+
+
+'''
+# my 1st solution using stack
+class Solution(object):
+    def isPalindrome(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        lst = []
+
+        while head:
+            lst.append(head.val)
+            head = head.next
+
+        return lst == lst[::-1]
+'''
