@@ -1,0 +1,87 @@
+# Question url:
+# https://leetcode.com/problems/intersection-of-two-linked-lists/description/
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+
+# a neat solution from other
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        pA = headA
+        pB = headB
+
+        while pA != pB:
+            pA = pA.next if pA else headB
+            pB = pB.next if pB else headA
+
+        return pA
+
+
+'''
+# my solution after looking at other's thinking process
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        pointA1 = headA
+        pointB1 = headB
+
+        while pointA1 or pointB1:
+            if pointA1 == pointB1:
+                return pointA1
+            if pointA1 is None:
+                pointA1 = headB
+                pointB1 = pointB1.next
+                continue
+            if pointB1 is None:
+                pointB1 = headA
+                pointA1 = pointA1.next
+                continue
+
+            pointA1 = pointA1.next
+            pointB1 = pointB1.next
+
+        return None
+'''
+
+'''
+# my solution using extra space, O(m+n) time
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        d = {}
+
+        while headA:
+            d[headA] = 1
+            headA = headA.next
+
+        while headB:
+            d[headB] = d.get(headB, 0) + 1
+            if d[headB] == 2:
+                return headB
+            headB = headB.next
+
+        return None
+'''
+
+'''
+# this solution will not work if the linked list isn't sorted
+# O(m+n) time, O(1) space
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+
+        while headA and headB:
+            if headA == headB:
+                return headA
+            elif headA.val < headB.val:
+                headA = headA.next
+            else:
+                headB = headB.next
+
+        return None
+'''
