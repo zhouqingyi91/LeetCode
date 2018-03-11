@@ -1,0 +1,110 @@
+# Question url: https://leetcode.com/problems/merge-two-binary-trees/description/
+
+
+# Definition for a binary tree node.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+# a nice clean recursive solution from other's
+class Solution(object):
+    def mergeTrees(self, t1, t2):
+
+        if t1 is None or t2 is None:
+            return t1 or t2
+
+        t3 = TreeNode(t1.val + t2.val)
+        t3.left = self.mergeTrees(t1.left, t2.left)
+        t3.right = self.mergeTrees(t1.right, t2.right)
+
+        return t3
+
+
+'''
+# an BFS solution without changing the input tree from other
+class Solution(object):
+    def mergeTrees(self, t1, t2):
+        if t1 is None and t2 is None:
+            return None
+
+        queue1 = collections.deque([t1])
+        queue2 = collections.deque([t2])
+        t3 = TreeNode(0)
+        queue = collections.deque([t3])
+
+        while queue1 and queue2:
+            node1, node2, node = queue1.popleft(), queue2.popleft(), queue.popleft()
+            node.val = (node1 and node1.val or 0) + (node2 and node2.val or 0)
+
+            if (node1 and node1.left) or (node2 and node2.left):
+                queue1.append(node1 and node1.left)
+                queue2.append(node2 and node2.left)
+                node.left = TreeNode(None)
+                queue.append(node.left)
+
+            if (node1 and node1.right) or (node2 and node2.right):
+                queue1.append(node1 and node1.right)
+                queue2.append(node2 and node2.right)
+                node.right = TreeNode(None)
+                queue.append(node.right)
+
+        return t3
+'''
+
+'''
+# an BFS solution changing the input tree from other
+class Solution(object):
+    def mergeTrees(self, t1, t2):
+        """
+        :type t1: TreeNode
+        :type t2: TreeNode
+        :rtype: TreeNode
+        """
+        if not (t1 and t2):
+            return t1 or t2
+        queue1, queue2 = collections.deque([t1]), collections.deque([t2])
+        while queue1 and queue2:
+            node1, node2 = queue1.popleft(), queue2.popleft()
+            if node1 and node2:
+                node1.val = node1.val + node2.val
+
+                if node1.left is None and node2.left:
+                    node1.left = TreeNode(0)
+                if node1.right is None and node2.right:
+                    node1.right = TreeNode(0)
+
+                queue1.append(node1.left)
+                queue1.append(node1.right)
+                queue2.append(node2.left)
+                queue2.append(node2.right)
+        return t1
+'''
+
+'''
+# my solution after peaking few lines of the solution
+class Solution(object):
+    def mergeTrees(self, t1, t2):
+        """
+        :type t1: TreeNode
+        :type t2: TreeNode
+        :rtype: TreeNode
+        """
+
+        if t1 and t2:
+            t1.val = t1.val + t2.val
+            t1.left = self.mergeTrees(t1.left, t2.left)
+            t1.right = self.mergeTrees(t1.right, t2.right)
+        # elif t1:
+        #     return t1
+        # elif t2:
+        #     return t2
+        # else:
+        #     return None
+        else:
+            return t1 or t2  # learned this line from other's solution
+
+        return t1
+'''
