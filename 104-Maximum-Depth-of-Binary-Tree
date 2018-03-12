@@ -1,0 +1,93 @@
+# Question url: https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+# a more concise recursive solution
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if root is None:
+            return 0
+        else:
+            left = self.maxDepth(root.left) + 1
+            right = self.maxDepth(root.right) + 1
+
+        return max(left, right)
+
+
+'''
+# my initial recursive solution
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if root is not None:
+            return self._maxDepth(root, 0)
+        else:
+            return 0
+
+    def _maxDepth(self, cur_node, cur_height):
+        if cur_node is None:
+            return cur_height
+        else:
+            left_height = self._maxDepth(cur_node.left, cur_height + 1)
+            right_height = self._maxDepth(cur_node.right, cur_height + 1)
+
+        return max(left_height, right_height)
+'''
+
+
+'''
+# DFS (start with root level = 0
+# end with leaf level + 1 eatra level of None)
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype:
+        """
+        stack = [(root, 0)]
+        ans = 0
+        while stack:
+            node, depth = stack.pop()
+            if node is None:
+                ans = max(ans, depth)
+            else:
+                stack.append((node.left, depth + 1))
+                stack.append((node.right, depth + 1))
+        return ans
+'''
+
+'''
+# BFS (start with root level = 1)
+class Solution(object):
+    def maxDepth(self, root):
+        if root is None:
+            return 0
+
+        from collections import deque
+        queue = deque([(root, 1)])
+
+        while queue:
+            node, depth = queue.popleft()
+
+            if node.left:
+                queue.append((node.left, depth + 1))
+            if node.right:
+                queue.append((node.right, depth + 1))
+
+            # print('node', node.val, 'depth', depth)
+
+        return depth
+'''
