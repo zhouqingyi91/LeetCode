@@ -1,0 +1,79 @@
+# Question url: https://leetcode.com/problems/invert-binary-tree/description/
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+# DFS
+class Solution(object):
+    def invertTree(self, root):
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            if node:
+                node.left, node.right = node.right, node.left
+                stack.extend([node.left, node.right])
+        return root
+
+
+'''
+# BFS
+class Solution(object):
+    def invertTree(self, root):
+        from collections import deque
+        queue = deque([root])
+        while queue:
+            curr = queue.popleft()
+            if curr:
+                curr.left, curr.right = curr.right, curr.left
+                queue.append(curr.left)
+                queue.append(curr.right)
+        return root
+'''
+
+'''
+# recursive solution
+class Solution():
+    def invertTree(self, root):
+        if root:
+            root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
+            return root
+'''
+
+
+'''
+# my 1st iterative solution
+class Solution(object):
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if root is None:
+            return None
+
+        stack = [root]
+
+        while stack:
+            dummy = stack.pop()
+            if dummy.left is None and dummy.right is None:
+                continue
+            elif dummy.left is None and dummy.right:
+                dummy.left = dummy.right
+                dummy.right = None
+                stack.append(dummy.left)
+            elif dummy.left and dummy.right is None:
+                dummy.right = dummy.left
+                dummy.left = None
+                stack.append(dummy.right)
+            else:
+                dummy.left, dummy.right = dummy.right, dummy.left
+                stack.append(dummy.left)
+                stack.append(dummy.right)
+
+        return root
+'''
