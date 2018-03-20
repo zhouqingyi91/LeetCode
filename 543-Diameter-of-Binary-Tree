@@ -1,0 +1,136 @@
+# Question url: https://leetcode.com/problems/diameter-of-binary-tree/description/
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+# improved runtime after looking at other's solution
+class Solution(object):
+    def diameterOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.total = 0
+
+        def maxDepth(node):
+            if node is None:
+                return 0
+            else:
+                left = maxDepth(node.left)
+                right = maxDepth(node.right)
+                self.total = max(self.total, left + right)
+            return max(left, right) + 1
+
+        maxDepth(root)
+
+        return self.total
+
+
+'''
+# improved iterative solution using hashtable
+class Solution:
+    def diameterOfBinaryTree(self, root):
+        if root is None:
+            return 0
+        d = {None: -1}
+        stack = [root]
+        ans = 0
+
+        while stack:
+            node = stack[-1]
+            if node.left in d and node.right in d:
+                stack.pop()
+                left = d[node.left] + 1
+                right = d[node.right] + 1
+                d[node] = max(left, right)
+                # build the hashtable from bottom up
+                # the key is the node, the value is the node's depth
+                ans = max(ans, left + right)
+                # keep track of the ans while we build the hashtable
+            else:
+                if node.left:
+                    stack.append(node.left)
+                if node.right:
+                    stack.append(node.right)
+        return ans
+'''
+
+
+'''
+# iterative solution with runtime 1400ms
+class Solution(object):
+    def diameterOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        stack = [root]
+        total = 0
+        while stack:
+            node = stack.pop()
+            leftans = 0
+            rightans = 0
+
+            if node:
+                leftstack = [(node.left, 0)]
+                rightstack = [(node.right, 0)]
+                stack.append(node.left)
+                stack.append(node.right)
+
+                while leftstack:
+                    leftnode, left = leftstack.pop()
+
+                    if leftnode:
+                        leftstack.append((leftnode.left, left + 1))
+                        leftstack.append((leftnode.right, left + 1))
+                    else:
+                        leftans = max(leftans, left)
+
+                while rightstack:
+                    rightnode, right = rightstack.pop()
+
+                    if rightnode:
+                        rightstack.append((rightnode.left, right + 1))
+                        rightstack.append((rightnode.right, right + 1))
+                    else:
+                        rightans = max(rightans, right)
+
+                total = max(total, leftans + rightans)
+
+        return total
+'''
+
+
+'''
+# initial recursive solution, runtime 1000ms
+class Solution(object):
+
+    total = 0
+
+    def diameterOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def maxDepth(node):
+            if node is None:
+                return 0
+            else:
+                left = maxDepth(node.left) + 1
+                right = maxDepth(node.right) + 1
+            return max(left, right)
+
+        if root:
+            left = maxDepth(root.left)
+            right = maxDepth(root.right)
+            self.total = max(self.total, left + right)
+            self.diameterOfBinaryTree(root.left)
+            self.diameterOfBinaryTree(root.right)
+
+        return self.total
+'''
