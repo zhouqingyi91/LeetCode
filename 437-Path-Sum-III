@@ -1,0 +1,90 @@
+# Question url:
+# https://leetcode.com/problems/path-sum-iii/description/
+
+
+# a recursive solution using hashtable, TC: O(N), SC: O(N)
+class Solution(object):
+    def pathSum(self, root, target):
+        preDict = {0: 1}
+        self.count = 0
+        self.dfs(root, target, 0, preDict)
+
+        return self.count
+
+    def dfs(self, root, target, curTotal, preDict):
+        if root:
+            curTotal += root.val
+            complement = curTotal - target
+            self.count += preDict.get(complement, 0)
+            preDict[curTotal] = preDict.get(curTotal, 0) + 1
+            self.dfs(root.left, target, curTotal, preDict)
+            self.dfs(root.right, target, curTotal, preDict)
+            preDict[curTotal] -= 1
+
+
+'''
+# brute force recursive
+class Solution(object):
+    def pathSum(self, root, target):
+        if root is None:
+            return 0
+
+        def dfs(root, target):
+            count = 0
+            if root is None:
+                return 0
+
+            if root.val == target:
+                count += 1
+
+            count += dfs(root.left, target - root.val)
+            count += dfs(root.right, target - root.val)
+
+            return count
+
+        left = self.pathSum(root.left, target)
+        right = self.pathSum(root.right, target)
+
+        return dfs(root, target) + left + right
+'''
+
+
+'''
+# initial brute force solution
+# runtime: 1583ms (20%), TC: O(N^2)
+class Solution(object):
+    def pathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: int
+        """
+        from collections import deque
+
+        queue = deque([root])
+        ans = 0
+
+        while queue:
+            node = queue.popleft()
+            if node:
+                ans += self.nodeCount(node, sum)
+                queue.append(node.left)
+                queue.append(node.right)
+
+        return ans
+
+    def nodeCount(self, root, sum):
+        stack = [(root, 0)]
+        count = 0
+
+        while stack:
+            node, total = stack.pop()
+            if node:
+                total += node.val
+                if total == sum:
+                    count += 1
+                stack.append((node.left, total))
+                stack.append((node.right, total))
+
+        return count
+'''
