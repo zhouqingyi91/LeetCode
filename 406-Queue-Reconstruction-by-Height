@@ -1,0 +1,64 @@
+# Question url:
+# https://leetcode.com/problems/queue-reconstruction-by-height/description/
+
+
+# same thinking process as initial solution, but
+# a more neat way to sort the original list in
+# descending order of height and ascending order
+# for the same height
+class Solution(object):
+    def reconstructQueue(self, people):
+        queue = []
+        sortedpeople = sorted([-x[0], x[1]] for x in people)
+
+        for person in sortedpeople:
+            queue.insert(person[1], [-person[0], person[1]])
+
+        return queue
+
+
+'''
+# another way to sort, but I'm not very
+# sure how the lambda work
+class Solution(object):
+    def reconstructQueue(self, people):
+        queue = []
+        sortedpeople = sorted(people, key=lambda x: (-x[0], x[1]))
+
+        for person in sortedpeople:
+            queue.insert(person[1], person)
+
+        return queue
+'''
+
+
+'''
+# initial solution after looked at the thinking process of the solution
+class Solution(object):
+    def reconstructQueue(self, people):
+        """
+        :type people: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        queue = []
+        sameHeight = []
+
+        while people:
+            while True:
+                person = max(people)
+                people.remove(max(people))
+                if people and person[0] == max(people)[0]:
+                    sameHeight.append(person)
+                else:
+                    break
+
+            queue.insert(person[1], person)
+
+            while sameHeight:
+                p = sameHeight.pop()
+                queue.insert(p[1], p)
+
+        return queue
+
+
+'''
