@@ -1,0 +1,41 @@
+# Question url:
+# https://leetcode.com/problems/binary-tree-inorder-traversal/description/
+
+
+# iterative
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        node = root
+        stack, ans = [], []
+        while stack or node:
+            while node:
+                stack.append(node)
+                node = node.left
+            node = stack.pop()
+            ans.append(node.val)
+            node = node.right
+
+        return ans
+
+
+'''
+# recursive solution, TC: O(N), SC: O(N)
+class Solution(object):
+    def inorderTraversal(self, root):
+        self.lst = []
+
+        def dfs(root):
+            if root is None:
+                return []
+            dfs(root.left)
+            self.lst.append(root.val)
+            dfs(root.right)
+
+        dfs(root)
+
+        return self.lst
+'''
