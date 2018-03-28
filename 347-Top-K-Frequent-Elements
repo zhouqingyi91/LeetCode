@@ -1,0 +1,37 @@
+# Question url:
+# https://leetcode.com/problems/top-k-frequent-elements/description/
+
+
+# initial solution, TC: O(N) (if the sorted function is O(N))
+class Solution(object):
+    def topKFrequent(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        d = {}
+        ans = []
+        for x in nums:
+            d[x] = d.get(x, 0) + 1
+
+        d = sorted([[y, x] for x, y in d.items()])
+
+        for i in range(k):
+            ans.append(d.pop()[1])
+
+        return ans
+
+
+'''
+# a one line solution using Counter, which is sth new
+class Solution(object):
+    def topKFrequent(self, nums, k):
+        import collections
+
+        return [i[0] for i in collections.Counter(nums).most_common(k)]
+'''
+
+lst = [1, 1, 1, 1, 1, 2, 2, 2, 2, 8, 8]
+k = 2
+print(Solution().topKFrequent(lst, k))
