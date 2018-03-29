@@ -26,16 +26,13 @@ class Solution(object):
 # recursive solution, TC: O(N), SC: O(N)
 class Solution(object):
     def inorderTraversal(self, root):
-        self.lst = []
+        lst = []
+        self.dfs(root, lst)
+        return lst
 
-        def dfs(root):
-            if root is None:
-                return []
-            dfs(root.left)
-            self.lst.append(root.val)
-            dfs(root.right)
-
-        dfs(root)
-
-        return self.lst
+    def dfs(self, root, lst):
+        if root:
+            self.dfs(root.left, lst)
+            lst.append(root.val)
+            self.dfs(root.right, lst)
 '''
