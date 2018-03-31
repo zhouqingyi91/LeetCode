@@ -1,0 +1,59 @@
+# Question url:
+# https://leetcode.com/problems/generate-parentheses/description/
+
+
+# a backtracking solution with the idea of a tree with '(' as the root
+class Solution(object):
+    def generateParenthesis(self, n):
+        ans = []
+        self.backtrack(ans, '', 0, 0, n)
+        return ans
+
+    def backtrack(self, ans, string, left, right, n):
+        if left == n and right == n:
+            ans.append(string)
+            return
+
+        if left < n:
+            self.backtrack(ans, string + '(', left + 1, right, n)
+
+        if right < left:
+            self.backtrack(ans, string + ')', left, right + 1, n)
+
+
+'''
+class Solution(object):
+    def generateParenthesis(self, n):
+        ans = []
+        self.dfs(ans, '', n, n)
+        return ans
+
+    def dfs(self, ans, path, left, right):
+        if left < 0 or right < 0 or left > right:
+            return
+
+        if left == 0 and right == 0:
+            ans.append(path)
+            return
+
+        self.dfs(ans, path + '(', left - 1, right)
+        self.dfs(ans, path + ')', left, right - 1)
+'''
+
+
+'''
+# an iterative solution from other
+# I don't think I can come up with an iterative solution
+class Solution(object):
+    def generateParenthesis(self, n):
+        d = {0: ['']}
+        for i in range(1, n + 1):
+            iCombos = []
+            for numPairsInLeft in range(1, i + 1):
+                for left in d[numPairsInLeft - 1]:
+                    for right in d[i - numPairsInLeft]:
+                        iCombos += ['(' + left + ')' + right]
+                        print(iCombos)
+            d[i] = iCombos
+        return d[n]
+'''
