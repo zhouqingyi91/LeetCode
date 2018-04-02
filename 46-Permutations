@@ -1,0 +1,36 @@
+# Question url:
+# https://leetcode.com/problems/permutations/description/
+
+
+# a backtracking solution I wrote after watching
+# some backtracking videos on youtube
+class Solution:
+    def permute(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        ans = []
+        self.helper(nums, ans, [])
+        return ans
+
+    def helper(self, nums, ans, subans):
+        if len(nums) == 0:  # base case
+            ans.append(list(subans))
+        else:
+            for i in range(len(nums)):
+                # choose
+                num = nums[i]
+                nums.remove(num)
+                subans.append(num)
+
+                # explore (recurse / backtrack)
+                self.helper(nums, ans, subans)
+
+                # un-choose
+                nums.insert(i, num)
+                subans.remove(num)
+
+
+lst = [1, 2, 3]
+print(len(Solution().permute(lst)))
