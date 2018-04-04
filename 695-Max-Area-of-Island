@@ -1,0 +1,61 @@
+# Question url:
+# https://leetcode.com/problems/max-area-of-island/description/
+
+
+# iterative solution TC: O(row * col), SC: O(row * col)
+class Solution(object):
+    def maxAreaOfIsland(self, grid):
+        seen = set()
+        stack = []
+        ans = 0
+        rown, coln = len(grid), len(grid[0])
+        for ri, row in enumerate(grid):
+            for ci, col in enumerate(row):
+                if col and (ri, ci) not in seen:
+                    seen.add((ri, ci))
+                    stack.append((ri, ci))
+                    count = 1
+                    while stack:
+                        r, c = stack.pop()
+                        for ir, ic in ((r + 1, c), (r - 1, c), (r, c - 1), (r, c + 1)):
+                            if (0 <= ir < rown and 0 <= ic < coln
+                                    and (ir, ic) not in seen
+                                    and grid[ir][ic]):
+                                count += 1
+                                stack.append((ir, ic))
+                                seen.add((ir, ic))
+                    ans = max(ans, count)
+        return ans
+
+
+'''
+# recursive solution TC: O(row * col), SC: O(row * col)
+class Solution(object):
+    def maxAreaOfIsland(self, grid):
+        areaList = [0]
+        self.seen = set()
+
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
+                if grid[r][c]:
+                    area = self.area(r, c, grid)
+                    areaList.append(area)
+        # or we can write those 5 lines as:
+        # areaList = [self.area(r, c, grid) for r in range(len(grid)) for c in range(len(grid[0])) if g[r][c]] + [0]
+
+        return max(areaList)
+
+    def area(self, r, c, grid):
+        if (0 <= r < len(grid) and 0 <= c < len(grid[0])
+                and (r, c) not in self.seen
+                and grid[r][c]):
+
+                self.seen.add((r, c))
+                area = (1 + self.area(r + 1, c, grid)
+                        + self.area(r - 1, c, grid)
+                        + self.area(r, c - 1, grid)
+                        + self.area(r, c + 1, grid))
+                return area
+        else:
+            return 0
+'''
