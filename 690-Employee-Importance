@@ -1,0 +1,86 @@
+# Question url:
+# https://leetcode.com/problems/employee-importance/description/
+
+
+"""
+# Employee info
+class Employee:
+    def __init__(self, id, importance, subordinates):
+        # It's the unique id of each node.
+        # unique id of this employee
+        self.id = id
+        # the importance value of this employee
+        self.importance = importance
+        # the id of direct subordinates
+        self.subordinates = subordinates
+"""
+
+
+# a recursive solution
+class Solution:
+    def getImportance(self, employees, id):
+        table = {emp.id: emp for emp in employees}
+
+        def dfs(emp):
+            if emp.subordinates == []:  # base case
+                return emp.importance
+            else:  # recursive case
+                value = emp.importance
+                for sub in emp.subordinates:
+                    value += dfs(table[sub])
+                return value
+                # or just:
+                # return emp.importance + sum([dfs(table[sub]) for sub in emp.subordinates])
+
+        return dfs(table[id])
+
+
+'''
+# revised iterative solution
+class Solution:
+    def getImportance(self, employees, id):
+        value = 0
+        table = {}
+        for emp in employees:
+            table[emp.id] = emp
+
+        stack = [table[id]]
+
+        while stack:
+            emp = stack.pop()
+            for sub in emp.subordinates:
+                stack.append(table[sub])
+            value += emp.importance
+
+        return value
+'''
+
+
+'''
+# initial iterative solution
+class Solution:
+    def getImportance(self, employees, id):
+        """
+        :type employees: Employee
+        :type id: int
+        :rtype: int
+        """
+        stack = []
+        seen = set()
+        value = 0
+        d = {}
+        for emp in employees:
+            if emp.id == id:
+                stack.append(emp)
+            d[emp.id] = emp
+
+        while stack:
+            emp = stack.pop()
+            for sub in emp.subordinates:
+                if sub not in seen:
+                    stack.append(d[sub])
+                    seen.add(sub)
+            value += emp.importance
+
+        return value
+'''
