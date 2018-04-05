@@ -1,0 +1,74 @@
+# Question url:
+# https://leetcode.com/problems/flood-fill/description/
+
+
+# revised iterative solution
+class Solution:
+    def floodFill(self, image, sr, sc, newColor):
+        target = image[sr][sc]
+        stack = [(sr, sc)]
+        nrow, ncol = len(image), len(image[0])
+
+        if target != newColor:
+            while stack:
+                r, c = stack.pop()
+                image[r][c] = newColor
+                for ir, ic in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                    if 0 <= ir < nrow and 0 <= ic < ncol and image[ir][ic] == target:
+                        stack.append((ir, ic))
+
+        return image
+
+
+'''
+# revised recursive solution
+class Solution:
+    def floodFill(self, image, sr, sc, newColor):
+        nrow, ncol = len(image), len(image[0])
+        target = image[sr][sc]
+
+        def dfs(r, c):
+            if 0 <= r < nrow and 0 <= c < ncol and image[r][c] == target:
+                image[r][c] = newColor
+                dfs(r + 1, c)
+                dfs(r - 1, c)
+                dfs(r, c + 1)
+                dfs(r, c - 1)
+
+        if target != newColor:
+            dfs(sr, sc)
+
+        return image
+'''
+
+
+'''
+# initial recursive solution
+class Solution:
+    def floodFill(self, image, sr, sc, newColor):
+        """
+        :type image: List[List[int]]
+        :type sr: int
+        :type sc: int
+        :type newColor: int
+        :rtype: List[List[int]]
+        """
+        seen = set()
+        nrow, ncol = len(image), len(image[0])
+        target = image[sr][sc]
+
+        def dfs(r, c):
+            if 0 <= r < nrow and 0 <= c < ncol and (r, c) not in seen and image[r][c] == target:
+                seen.add((r, c))
+                image[r][c] = newColor
+            else:
+                return
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+
+        dfs(sr, sc)
+
+        return image
+'''
