@@ -1,0 +1,134 @@
+# Question url:
+# https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/
+
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+# build the tree in inorder traversal
+class Solution:
+    def sortedArrayToBST(self, nums):
+        if nums == []:
+            return None
+
+        mid = len(nums) // 2
+        left = self.sortedArrayToBST(nums[:mid])
+        root = TreeNode(nums[mid])
+        right = self.sortedArrayToBST(nums[mid + 1:])
+
+        root.left = left
+        root.right = right
+
+        return root
+
+
+'''
+# build the tree in inorder traversal
+class Solution:
+    def sortedArrayToBST(self, nums):
+        self.index = 0
+
+        def dfs(left, right):
+            if left > right:
+                return None
+            if left == right:
+                self.index += 1
+                return TreeNode(nums[left])
+
+            mid = (left + right) // 2
+            left = dfs(left, mid - 1)
+
+            root = TreeNode(nums[self.index])
+            self.index += 1
+
+            right = dfs(mid + 1, right)
+
+            root.left = left
+            root.right = right
+            return root
+
+        return dfs(0, len(nums) - 1)
+'''
+
+
+'''
+# iterative solution
+# build the tree in preorder traversal
+class Solution:
+    def sortedArrayToBST(self, nums):
+        if not nums:
+            return None
+
+        from collections import deque
+        head = TreeNode(0)
+        queue = deque([head])
+        leftbound = deque([0])
+        rightbound = deque([len(nums) - 1])
+
+        while queue:
+            curr = queue.popleft()
+            left = leftbound.popleft()
+            right = rightbound.popleft()
+            mid = (right + left) // 2
+            curr.val = nums[mid]
+
+            if left <= mid - 1:
+                curr.left = TreeNode(0)
+                queue.append(curr.left)
+                leftbound.append(left)
+                rightbound.append(mid - 1)
+
+            if right >= mid + 1:
+                curr.right = TreeNode(0)
+                queue.append(curr.right)
+                leftbound.append(mid + 1)
+                rightbound.append(right)
+
+        return head
+'''
+
+
+'''
+# another other recursive solution based on the idea
+# of the last solution, but instead of passing sliced
+# array, we pass the boundary of the sliced array
+class Solution:
+    def sortedArrayToBST(self, nums):
+        def arrayboundary(left, right):
+            if left > right:
+                return None
+            else:
+                mid = (left + right) // 2
+                node = TreeNode(nums[mid])
+                node.left = arrayboundary(left, mid - 1)
+                node.right = arrayboundary(mid + 1, right)
+                return node
+
+        return arrayboundary(0, len(nums) - 1)
+'''
+
+
+'''
+# an easy understanding recursive solution
+# but passing sliced array is expensive on memory
+# build the tree in preorder traversal
+class Solution:
+    def sortedArrayToBST(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        if nums == []:  # base case (not necessary though)
+            return None
+        else:
+            mid = len(nums) // 2
+            newNode = TreeNode(nums[mid])
+            newNode.left = self.sortedArrayToBST(nums[:mid])
+            newNode.right = self.sortedArrayToBST(nums[mid + 1:])
+            return newNode
+'''
