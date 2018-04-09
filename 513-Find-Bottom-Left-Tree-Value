@@ -1,0 +1,46 @@
+# Question url:
+# https://leetcode.com/problems/find-bottom-left-tree-value/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+class Solution_BFS:
+    def findBottomLeftValue(self, root):
+        from collections import deque
+        queue = deque([root])
+        while queue:
+            node = queue.popleft()
+            if node.right:  # from right to left
+                queue.append(node.right)
+            if node.left:
+                queue.append(node.left)
+        return node.val
+
+
+class Solution_recursion:
+    def findBottomLeftValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.maxDepth = float('-inf')
+        self.value = 0
+
+        def maxDepth(root, depth):
+            if root is None:
+                return
+            maxDepth(root.left, depth + 1)
+            maxDepth(root.right, depth + 1)
+            if depth > self.maxDepth:
+                self.maxDepth = depth
+                self.value = root.val
+
+        maxDepth(root, 0)
+
+        return self.value
