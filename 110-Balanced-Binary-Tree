@@ -1,0 +1,79 @@
+# Question url:
+# https://leetcode.com/problems/balanced-binary-tree/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+# a postorder iterative solution
+class Solution_PostorderIterative():
+    def isBalanced(self, root):
+        stack = []
+        node = root
+        last = None
+        depths = {}
+        while stack or node:
+            while node:
+                stack.append(node)
+                node = node.left
+
+            node = stack[-1]
+
+            if not node.right or last == node.right:
+                node = stack.pop()
+                left, right = depths.get(node.left, 0), depths.get(node.right, 0)
+                if abs(left - right) > 1:
+                    return False
+                depths[node] = 1 + max(left, right)
+                last = node
+                node = None
+            else:
+                node = node.right
+
+        return True
+
+
+# another recursive solution without the extra switch variable
+class Solution:
+    def isBalanced(self, root):
+
+        def check(root):
+            if root is None:
+                return 0
+            left = check(root.left)
+            right = check(root.right)
+            if left == -1 or right == -1 or abs(left - right) > 1:
+                return -1
+            return max(left, right) + 1
+
+        return check(root) != -1
+
+
+# initial revised solution
+class Solution_switch:
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        self.switch = True
+
+        def treeDepth(root):
+            if root is None:
+                return 1
+
+            left = treeDepth(root.left) + 1
+            right = treeDepth(root.right) + 1
+
+            if not self.switch or abs(left - right) > 1:
+                self.switch = False
+                return self.switch
+            else:
+                return max(left, right)
+
+        return bool(treeDepth(root))
