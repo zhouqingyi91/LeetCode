@@ -1,0 +1,54 @@
+# Question url:
+# https://leetcode.com/problems/find-largest-value-in-each-tree-row/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+# basically copied this solution from Stefan
+# understanding the code took some time
+class Solution_iterative:
+    def largestValues(self, root):
+        maxes = []
+        row = [root]
+        while any(row):
+            maxes.append(max(node.val for node in row))
+            row = [kid for node in row for kid in (node.left, node.right) if kid]
+            # the above line is equivenlent to：
+            # dummy = []
+            # for node in row:
+            #     for kid in (node.left, node.right):
+            #         if kid:
+            #             dummy.append(kid)
+            # row = dummy
+
+        return maxes
+
+
+# learned the if len(self.lst) part from other's solution
+class Solution_recursive_preorder_traversal:
+    def largestValues(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        self.lst = []
+        self.depth(root, 0)
+        return self.lst
+
+    def depth(self, root, depth):
+        if root is None:
+            return
+
+        if len(self.lst) == depth:
+            self.lst.append(root.val)
+        else:
+            self.lst.append(max(self.lst[depth], root.val))
+
+        self.depth(root.left, depth + 1)
+        self.depth(root.right, depth + 1)
