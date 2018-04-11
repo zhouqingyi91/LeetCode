@@ -1,0 +1,33 @@
+# Question url:
+# https://leetcode.com/problems/average-of-levels-in-binary-tree/description/
+
+
+class Solution_iterative:
+    def averageOfLevels(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[float]
+        """
+        row = [root]
+        averages = []
+        while any(row):
+            averages.append(sum(node.val for node in row) / len(row))
+            row = [kid for node in row for kid in (node.left, node.right) if kid]
+
+        return averages
+
+
+class Solution_recursive:
+    def averageOfLevels(self, root):
+        row = []
+
+        def dfs(root, depth):
+            if root:
+                if len(row) == depth:
+                    row.append([0, 0])
+                row[depth][0] += root.val
+                row[depth][1] += 1
+                dfs(root.left, depth + 1)
+                dfs(root.right, depth + 1)
+        dfs(root, 0)
+        return [total / n_node for total, n_node in row]
