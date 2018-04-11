@@ -1,0 +1,39 @@
+# Question url:
+# https://leetcode.com/problems/two-sum-iv-input-is-a-bst/description/
+
+
+class Solution_recursion_with_set:
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        table = set()
+
+        def dfs(root, k):
+            if root is None:
+                return False
+            if root.val in table:
+                return True
+            table.add(k - root.val)
+            return dfs(root.left, k) or dfs(root.right, k)
+
+        return dfs(root, k)
+
+
+class Solution_modifying_list_while_looping:
+    def findTarget(self, root, k):
+        if not root:
+            return False
+        bfs, s = [root], set()
+        for i in bfs:
+            print(i.val)
+            if k - i.val in s:
+                return True
+            s.add(i.val)
+            if i.left:
+                bfs.append(i.left)
+            if i.right:
+                bfs.append(i.right)
+        return False
