@@ -1,0 +1,69 @@
+# Question url:
+# https://leetcode.com/problems/trim-a-binary-search-tree/description/
+
+
+class Solution_iteration:
+    def trimBST(self, root, L, R):
+        if root is None:
+            return None
+        # find a valid root
+        while root.val < L or root.val > R:
+            if root.val < L:
+                root = root.right
+            if root.val > R:
+                root = root.left
+        # remove invalid nodes form left subtree
+        dummy = root
+        while dummy:
+            while dummy.left and dummy.left.val < L:
+                dummy.left = dummy.left.right
+            dummy = dummy.left
+        # remove invalid nodes from right subtree
+        dummy = root
+        while dummy:
+            while dummy.right and dummy.right.val > R:
+                dummy.right = dummy.right.left
+            dummy = dummy.right
+        return root
+
+
+# very surprise how easy this question is with recursion
+# Intuition: let trimBST(node) return the desired trimmed subtrees
+# with node as the root
+class Solution_top_down_recursion:
+    def trimBST(self, root, L, R):
+        """
+        :type root: TreeNode
+        :type L: int
+        :type R: int
+        :rtype: TreeNode
+        """
+        if root is None:
+            return None
+        elif root.val < L:
+            return self.trimBST(root.right, L, R)
+        elif root.val > R:
+            return self.trimBST(root.left, L, R)
+        else:
+            root.left = self.trimBST(root.left, L, R)
+            root.right = self.trimBST(root.right, L, R)
+            return root
+
+
+# Intuition: let trim(node) return node within the range(L, R)
+class Solution_bottom_up_recursion:
+    def trimBST(self, root, L, R):
+        if root is None:
+            return None
+
+        root.left = self.trimBST(root.left, L, R)
+        root.right = self.trimBST(root.right, L, R)
+
+        if L <= root.val <= R:
+            return root
+        elif root.left is not None:
+            return root.left
+        elif root.right is not None:
+            return root.right
+        else:
+            return None
