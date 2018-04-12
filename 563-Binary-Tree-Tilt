@@ -1,0 +1,20 @@
+# Question url:
+# https://leetcode.com/problems/binary-tree-tilt/description/
+
+
+class Solution_recursion_with_tuple:
+    def findTilt(self, root):
+
+        def nodeInfo(root):
+            if root is None:
+                return (0, 0)
+
+            # doesn't really need the if statement below
+            # if root.left is None and root.right is None:
+            #     return (root.val, 0)
+
+            left = nodeInfo(root.left)
+            right = nodeInfo(root.right)
+            return (root.val + left[0] + right[0], abs(left[0] - right[0]) + left[1] + right[1])
+
+        return nodeInfo(root)[1]
