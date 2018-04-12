@@ -1,0 +1,70 @@
+# Question url:
+# https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
+
+
+class Solution_iterative:
+    def lowestCommonAncestor(self, root, p, q):
+        while root:
+            if p.val < root.val > q.val:
+                root = root.left
+            elif p.val > root.val < q.val:
+                root = root.right
+            else:
+                return root
+        # tricks
+        # while (root.val - p.val) * (root.val - q.val) > 0:
+        # // math trick: if root btwn q and p, become negative
+        #     root = (root.left, root.right)[p.val > root.val]
+        # // if [p.val > root.val] is True(1), root = root.right
+        # // if [p.val > root.val] is False(0), root = root.left
+        # return root
+
+
+class Solution_recursive:
+    def lowestCommonAncestor(self, root, p, q):
+        if root:
+            if p.val < root.val > q.val:
+                return self.lowestCommonAncestor(root.left, p, q)
+            elif p.val > root.val < q.val:
+                return self.lowestCommonAncestor(root.right, p, q)
+            return root
+
+        # next = p.val < root.val > q.val and root.left or \
+        #        p.val > root.val < q.val and root.right
+        # return self.lowestCommonAncestor(next, p, q) if next else root
+
+
+class Solution_initial_recursive_revised:
+    def lowestCommonAncestor(self, root, p, q):
+        def dfs(root):
+            if root:
+                if p.val < root.val > q.val:
+                    return dfs(root.left)
+                elif p.val > root.val < q.val:
+                    return dfs(root.right)
+                else:
+                    return root
+        return dfs(root)
+
+
+class Solution_initial_recursive:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+
+        def dfs(root):
+            if root:
+                if p.val >= root.val and q.val <= root.val:
+                    return root.val
+                elif p.val <= root.val and q.val >= root.val:
+                    return root.val
+                elif p.val <= root.val and q.val <= root.val:
+                    return dfs(root.left)
+                elif p.val >= root.val and q.val >= root.val:
+                    return dfs(root.right)
+
+        return dfs(root)
