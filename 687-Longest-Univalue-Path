@@ -1,0 +1,61 @@
+# Question url:
+# https://leetcode.com/problems/longest-univalue-path/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+class Solution_revised_initial_solution:
+    def longestUnivaluePath(self, root):
+        def dfs(root):
+            if root:
+                left = dfs(root.left)
+                right = dfs(root.right)
+                if not (root.left and root.left.val == root.val):
+                    left = 0
+                if not (root.right and root.right.val == root.val):
+                    right = 0
+
+                self.total = max(self.total, left + right)
+                return max(left, right) + 1
+
+        self.total = 0
+        dfs(root)
+        return self.total
+
+
+class Solution_initial_solution:
+    def longestUnivaluePath(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def dfs(root):
+            if root is None:
+                return 0
+            if root.left and root.left.val == root.val:
+                left = dfs(root.left)
+            else:
+                left = 0
+                stack.append(root.left)
+            if root.right and root.right.val == root.val:
+                right = dfs(root.right)
+            else:
+                right = 0
+                stack.append(root.right)
+
+            self.total = max(self.total, left + right)
+            return max(left, right) + 1
+
+        stack = [root]
+        self.total = 0
+        while stack:
+            node = stack.pop()
+            dfs(node)
+
+        return self.total
