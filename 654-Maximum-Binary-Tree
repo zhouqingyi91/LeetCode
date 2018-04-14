@@ -1,0 +1,43 @@
+# Question url:
+# https://leetcode.com/problems/maximum-binary-tree/description/
+
+
+# Definition for a binary tree node.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution_another_recurion:
+    def constructMaximumBinaryTree(self, nums):
+        return self.construct(nums, 0, len(nums))
+
+    def construct(self, nums, left, right):
+        if left == right:
+            return None
+        maxNum = max(nums[left:right])
+        maxIndex = nums.index(maxNum)
+        root = TreeNode(maxNum)
+        root.left = self.construct(nums, left, maxIndex)
+        root.right = self.construct(nums, maxIndex + 1, right)
+
+        return root
+
+
+class Solution_initial_recursion:
+    def constructMaximumBinaryTree(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        if nums == []:
+            return None
+        maxNum = max(nums)
+        maxIndex = nums.index(maxNum)
+        root = TreeNode(maxNum)
+        root.left = self.constructMaximumBinaryTree(nums[:maxIndex])
+        root.right = self.constructMaximumBinaryTree(nums[maxIndex + 1:])
+
+        return root
