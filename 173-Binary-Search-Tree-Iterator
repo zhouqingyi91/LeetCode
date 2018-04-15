@@ -1,0 +1,30 @@
+# Question url:
+# https://leetcode.com/problems/binary-search-tree-iterator/description/
+
+
+class BSTIterator(object):
+    def __init__(self, root):
+        """
+        :type root: TreeNode
+        """
+        self.reverse_inorder = []
+        stack = []
+        while stack or root:
+            while root:
+                stack.append(root)
+                root = root.right
+            root = stack.pop()
+            self.reverse_inorder.append(root.val)
+            root = root.left
+
+    def hasNext(self):
+        """
+        :rtype: bool
+        """
+        return self.reverse_inorder != []
+
+    def next(self):
+        """
+        :rtype: int
+        """
+        return self.reverse_inorder.pop()
