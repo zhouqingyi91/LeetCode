@@ -1,0 +1,31 @@
+# Question url:
+# https://leetcode.com/problems/unique-binary-search-trees/description/
+
+
+class Solution_iterative:
+    def numTrees(self, n):
+        d = [0] * (n + 1)
+        d[0] = d[1] = 1
+        for i in range(2, n + 1):  # G(i) up to G(n)
+            for j in range(1, i + 1):  # start with 1 as root up to j(which is i)
+                d[i] += d[j - 1] * d[i - j]
+
+        return d[n]
+
+
+class Solution_memoization:
+    def numTrees(self, n):
+        memo = [0] * (n + 1)  # set up
+        return self.helper(n, memo)
+
+    def helper(self, n, memo):
+        if memo[n] != 0:  # memoization
+            return memo[n]
+        elif n <= 1:  # base case
+            return 1
+        else:  # recursion
+            total = 0
+            for i in range(1, n + 1):
+                total += self.helper(i - 1, memo) * self.helper(n - i, memo)
+            memo[n] = total
+            return total
