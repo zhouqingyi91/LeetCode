@@ -1,0 +1,74 @@
+# Question url:
+# https://leetcode.com/problems/sum-root-to-leaf-numbers/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+class Solution_recursion_without_any_variable:
+    def sumNumbers(self, root):
+        return self.dfs(root, 0)
+
+    def dfs(self, root, value):
+        if root is None:
+            return 0
+        if not root.left and not root.right:
+            return value * 10 + root.val
+        return self.dfs(root.left, value * 10 + root.val) + \
+            self.dfs(root.right, value * 10 + root.val)
+
+
+class Solution_recursion_without_global_variable:
+    def sumNumbers(self, root):
+        return self.dfs(root, 0)
+
+    def dfs(self, root, value):
+        val = 0
+        if root:
+            if not root.left and not root.right:
+                val += value * 10 + root.val
+                return val
+            val += self.dfs(root.left, value * 10 + root.val)
+            val += self.dfs(root.right, value * 10 + root.val)
+        return val
+
+
+class Solution_revised_using_actual_root_value:
+    def sumNumbers(self, root):
+        self.total = 0
+
+        def dfs(root, value):
+            if root:
+                dfs(root.left, value * 10 + root.val)
+                dfs(root.right, value * 10 + root.val)
+                if not root.left and not root.right:
+                    self.total += value * 10 + root.val
+        dfs(root, 0)
+        return self.total
+
+
+class Solution_initial_recursion_using_string:
+    def sumNumbers(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.total = 0
+
+        def dfs(root, string):
+            if root is None:
+                return None
+
+            dfs(root.left, string + str(root.val))
+            dfs(root.right, string + str(root.val))
+
+            if not root.left and not root.right:
+                self.total += int(string + str(root.val))
+
+        dfs(root, '')
+        return self.total
