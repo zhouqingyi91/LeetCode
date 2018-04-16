@@ -1,0 +1,32 @@
+# Question url:
+# https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution_recursion:
+    def zigzagLevelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        ans = []
+
+        def dfs(root, depth):
+            if root:
+                if len(ans) == depth:
+                    ans.append([])
+                if depth % 2 == 0:
+                    ans[depth].append(root.val)
+                else:
+                    ans[depth].insert(0, root.val)
+                dfs(root.left, depth + 1)
+                dfs(root.right, depth + 1)
+
+        dfs(root, 0)
+        return ans
