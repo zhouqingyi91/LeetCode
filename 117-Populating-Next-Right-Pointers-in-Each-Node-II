@@ -1,0 +1,51 @@
+# Question url:
+# https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/description/
+
+
+# Definition for binary tree with next pointer.
+# class TreeLinkNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+#         self.next = None
+
+
+class Solution_iterative_with_space(1):
+    # @param root, a tree link node
+    # @return nothing
+    def connect(self, root):
+        cur = root  # node of current level
+        head = None  # leftmost node of lower level
+        walk = None  # traversing node of lower level
+        while cur:
+            head = None
+            walk = None
+            while cur:
+                if cur.left:
+                    if walk:
+                        walk.next = cur.left
+                    else:
+                        head = cur.left
+                    walk = cur.left
+                if cur.right:
+                    if walk:
+                        walk.next = cur.right
+                    else:
+                        head = cur.right
+                    walk = cur.right
+                cur = cur.next
+            cur = head
+
+
+class Solution_iterative_with_spaceN:
+    # @param root, a tree link node
+    # @return nothing
+    def connect(self, root):
+        row = [root]
+        while any(row):
+            n = len(row)
+            for index in range(n):
+                if index + 1 < n:
+                    row[index].next = row[index + 1]
+            row = [kid for node in row for kid in (node.left, node.right) if kid]
