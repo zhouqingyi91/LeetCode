@@ -1,0 +1,62 @@
+# Question url:
+# https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/description/
+
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution_recursive_without_hashtable:
+    def buildTree(self, inorder, postorder):
+        self.pIn = len(inorder) - 1
+        self.pPost = len(postorder) - 1
+
+        return self.helper(inorder, postorder, None)
+
+    def helper(self, inorder, postorder, end):
+        if self.pPost < 0:
+            return None
+
+        root = TreeNode(postorder[self.pPost])
+        self.pPost -= 1
+
+        if inorder[self.pIn] != root.val:
+            root.right = self.helper(inorder, postorder, root)
+
+        self.pIn -= 1
+
+        if end is None or inorder[self.pIn] != end.val:
+            root.left = self.helper(inorder, postorder, end)
+
+        return root
+
+
+class Solution_recursive_with_hashtable:
+    def buildTree(self, inorder, postorder):
+        """
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        """
+        d = {}
+        for i, x in enumerate(inorder):
+            d[x] = i
+        return self.helper(d, inorder, postorder, 0, len(inorder) - 1, 0, len(postorder) - 1)
+
+    def helper(self, d, inorder, post, inStart, inEnd, postStart, postEnd):
+        if inStart > inEnd or postStart > postEnd:
+            return None
+
+        index = d[post[postEnd]]
+
+        root = TreeNode(post[postEnd])
+        root.left = self.helper(d, inorder, post, inStart, index - 1,
+                                postStart, postStart + index - inStart - 1)
+        root.right = self.helper(d, inorder, post, index + 1, inEnd,
+                                 postStart + index - inStart, postEnd - 1)
+
+        return root
