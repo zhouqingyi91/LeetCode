@@ -1,0 +1,44 @@
+# Question url:
+# https://leetcode.com/problems/delete-node-in-a-bst/description/
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+class Solution_recursive:
+    def deleteNode(self, root, key):
+        """
+        :type root: TreeNode
+        :type key: int
+        :rtype: TreeNode
+        """
+        if root is None:
+            return None
+
+        if key < root.val:
+            root.left = self.deleteNode(root.left, key)
+        elif key > root.val:
+            root.right = self.deleteNode(root.right, key)
+        else:
+            if root.left is None and root.right is None:
+                root = None
+            elif root.right is None:
+                root = root.left
+            elif root.left is None:
+                root = root.right
+            else:
+                newData = self.getmin(root.right)
+                root.val = newData
+                root.right = self.deleteNode(root.right, newData)
+
+        return root
+
+    def getmin(self, root):
+        if root and root.left is None:
+            return root.val
+        return self.getmin(root.left)
