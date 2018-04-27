@@ -1,0 +1,40 @@
+# Question url:
+# https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
+
+
+class Solution_recursive_after_watching_others:
+    def lowestCommonAncestor(self, root, p, q):
+        if root is None or root == p or root == q:
+            return root
+
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+
+        return root if left and right else left or right
+
+
+# find the path to p and q
+# the LCA will be the last identical node in ppath and qpath
+class Solution_iterative:
+    def lowestCommonAncestor(self, root, p, q):
+        ppath = self.path(root, p)
+        qpath = self.path(root, q)
+
+        n = min(len(ppath), len(qpath))
+        for i in range(n):
+            if ppath[i] != qpath[i]:
+                return ppath[i - 1]
+        return ppath[n - 1]
+
+    def path(self, root, target):
+        stack, path = [root], []
+        while stack:
+            node = stack.pop()
+            if node:
+                if node in path[-1:]:
+                    path.pop()
+                else:
+                    path.append(node)
+                    if node == target:
+                        return path
+                    stack.extend([node, node.left, node.right])
