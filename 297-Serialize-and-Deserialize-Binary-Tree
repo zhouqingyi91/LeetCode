@@ -1,0 +1,142 @@
+# Question url:
+# https://leetcode.com/problems/serialize-and-deserialize-binary-tree/description/
+
+
+# Definition for a binary tree node.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Codec_iterative_preorder:
+    def serialize(self, root):
+        stack = [root]
+        code = ''
+        while stack:
+            node = stack.pop()
+            if node:
+                code += '#' + str(node.val)
+                stack.extend([node.right, node.left])
+            else:
+                code += '#$'
+        return code
+
+    def deserialize(self, data):
+        data = data[1:].split('#')[::-1]
+        val = data.pop()
+        cur = root = TreeNode(int(val)) if val != '$' else None
+        stack = [root]
+        while data:
+            val = data.pop()
+            while data and val != '$':
+                cur.left = TreeNode(int(val))
+                cur = cur.left
+                stack.append(cur)
+                val = data.pop()
+            while data and val == '$':
+                cur = stack.pop()
+                val = data.pop()
+            if data:
+                cur.right = TreeNode(int(val))
+                cur = cur.right
+                stack.append(cur)
+
+        return root
+
+
+class Codec_iterative_BFS:
+    def serialize(self, root):
+        from collections import deque
+
+        code, queue = '', deque([root])
+        while queue:
+            node = queue.popleft()
+            if node:
+                code += '#' + str(node.val)
+                queue.extend([node.left, node.right])
+            else:
+                code += '#$'
+        return code
+
+    def deserialize(self, data):
+        from collections import deque
+
+        data = data[1:].split('#')
+        root = TreeNode(data[0]) if data[0] != '$' else None
+        queue = deque([root])
+        index = 1
+        while index < len(data):
+            node = queue.popleft()
+            if data[index] != '$':
+                node.left = TreeNode(data[index])
+                queue.append(node.left)
+            index += 1
+            if data[index] != '$':
+                node.right = TreeNode(data[index])
+                queue.append(node.right)
+            index += 1
+
+        return root
+
+
+class Codec_iterative_walk_tree_top_bottom_left_right:
+    def serialize(self, root):
+        code, stack = '', [root]
+        for node in stack:
+            if node:
+                code += '#' + str(node.val)
+                stack.extend([node.left, node.right])
+            else:
+                code += '#$'
+        return code
+
+    def deserialize(self, data):
+        data = data[1:].split('#')[::-1]
+        val = data.pop()
+        root = TreeNode(int(val)) if val != '$' else None
+        stack = [root]
+        for node in stack:
+            if node:
+                left, right = data.pop(), data.pop()
+                node.left = TreeNode(int(left)) if left != '$' else None
+                node.right = TreeNode(int(right)) if right != '$' else None
+                stack.extend([node.left, node.right])
+        return root
+
+
+class Codec_recursive_preorder:
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+
+        :type root: TreeNode
+        :rtype: str
+        """
+        if root is None:
+            return '#$'
+        return '#' + str(root.val) + self.serialize(root.left) + self.serialize(root.right)
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+
+        :type data: str
+        :rtype: TreeNode
+        """
+        data = data[1:].split('#')[::-1]
+
+        def buildtree(string):
+            val = string.pop()
+            if val == '$':
+                return None
+            node = TreeNode(int(val))
+            node.left = buildtree(string)
+            node.right = buildtree(string)
+            return node
+
+        return buildtree(data)
+
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.deserialize(codec.serialize(root))
