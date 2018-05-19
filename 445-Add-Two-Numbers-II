@@ -1,0 +1,61 @@
+# Question url:
+# https://leetcode.com/problems/add-two-numbers-ii/description/
+
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_iterative_no_large_number:
+    def addTwoNumbers(self, l1, l2):
+        s1, s2 = [], []
+        n1, n2 = l1, l2
+        while n1:
+            s1.append(n1.val)
+            n1 = n1.next
+        while n2:
+            s2.append(n2.val)
+            n2 = n2.next
+
+        total = 0
+        node = ListNode(0)
+        while s1 or s2:
+            if s1:
+                total += s1.pop()
+            if s2:
+                total += s2.pop()
+            node.val = total % 10
+            head = ListNode(total // 10)
+            head.next = node
+            node = head
+            total //= 10
+
+        return node.next if head.val == 0 else node
+
+
+class Solution_initial_solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        s1, s2 = '', ''
+        n1, n2 = l1, l2
+        while n1:
+            s1 += str(n1.val)
+            n1 = n1.next
+        while n2:
+            s2 += str(n2.val)
+            n2 = n2.next
+        num = str(int(s1) + int(s2))
+
+        dummy = ans = ListNode(0)
+        for x in num:
+            dummy.next = ListNode(int(x))
+            dummy = dummy.next
+
+        return ans.next
