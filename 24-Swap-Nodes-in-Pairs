@@ -1,0 +1,68 @@
+# Question url:
+# https://leetcode.com/problems/swap-nodes-in-pairs/description/
+
+
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_short_recursive:
+    def swapPairs(self, head):
+        if head and head.next:
+            head, head.next, head.next.next = \
+                head.next, head, self.swapPairs(head.next.next)
+        return head
+
+
+class Solution_recursive_easy_to_understand:
+    def swapPairs(self, head):
+        if head is None or head.next is None:
+            return head
+        temp = head.next
+        head.next = self.swapPairs(head.next.next)
+        temp.next = head
+        return temp
+
+
+class Solution_stefan_iterative2:
+    def swapPairs(self, head):
+        pre, pre.next = self, head
+        while pre.next and pre.next.next:
+            pre.next, pre.next.next, pre.next.next.next, pre = \
+                pre.next.next, pre.next, pre.next.next.next, pre.next
+            # OR
+            # pre.next, pre, pre.next.next, pre.next = \
+            #   pre.next.next, pre.next, pre.next, pre.next.next.next
+        return self.next
+
+
+class Solution_stefan_iterative:
+    def swapPairs(self, head):
+        pre, pre.next = self, head
+        while pre.next and pre.next.next:
+            a = pre.next
+            b = pre.next.next
+            pre.next, b.next, a.next = b, a, b.next
+            pre = a
+        return self.next
+
+
+class Solution_revised_initial_easy_to_understand:
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        ans = run = ListNode(0)
+        run.next = head
+        while head and head.next:
+            temp = head.next
+            head.next = head.next.next
+            temp.next = head
+            run.next = temp
+            run = run.next.next
+            head = head.next
+
+        return ans.next
