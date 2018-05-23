@@ -1,0 +1,82 @@
+# Question url:
+# https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/description/
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution_recursive3_bottom_up_TimeN:
+    def sortedListToBST(self, head):
+        length, runner = 0, head
+        while runner:
+            length += 1
+            runner = runner.next
+        self.head = head
+        return self.convert(0, length)
+
+    def convert(self, start, end):
+        if start == end:
+            return None
+        mid = start + (end - start) // 2
+        left = self.convert(start, mid)
+        root = TreeNode(self.head.val)
+        root.left = left
+        self.head = self.head.next
+        root.right = self.convert(mid + 1, end)
+        return root
+
+
+class Solution_recursive2:
+    def sortedListToBST(self, head):
+        if head is None:
+            return None
+        if head.next is None:
+            return TreeNode(head.val)
+
+        def findmid(head):
+            slow = fast = head
+            while fast and fast.next:
+                prev = slow
+                slow = slow.next
+                fast = fast.next.next
+            prev.next = None
+            return slow
+
+        mid = findmid(head)
+        root = TreeNode(mid.val)
+        root.left = self.sortedListToBST(head)
+        root.right = self.sortedListToBST(mid.next)
+        return root
+
+
+class Solution_recursive:
+    def sortedListToBST(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+        return self.convert(head, None)
+
+    def convert(self, head, tail):
+        if head == tail:
+            return None
+        slow = fast = head
+        while fast != tail and fast.next != tail:
+            slow = slow.next
+            fast = fast.next.next
+        root = TreeNode(slow.val)
+        root.left = self.convert(head, slow)
+        root.right = self.convert(slow.next, tail)
+        return root
