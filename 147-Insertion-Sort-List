@@ -1,0 +1,106 @@
+# Question url:
+# https://leetcode.com/problems/insertion-sort-list/description/
+
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_recursive3:
+    def insertionSortList(self, head):
+        if head is None or head.next is None:
+            return head
+        nxt = self.insertionSortList(head.next)
+        if nxt.val >= head.val:
+            head.next = nxt
+            return head
+
+        run = nxt
+        while run.next and run.next.val <= head.val:
+            run = run.next
+        head.next = run.next
+        run.next = head
+        return nxt
+
+
+class Solution_recursive2:
+    def insertionSortList(self, head):
+        run = new = ListNode(0)
+        return self.helper(head, new, run)
+
+    def helper(self, head, new, run):
+        if head is None:
+            return new.next
+        if run and run.val > head.val:
+            run = new
+        while run.next and run.next.val <= head.val:
+            run = run.next
+        run.next, run.next.next, head = head, run.next, head.next
+        return self.helper(head, new, run)
+
+
+class Solution_iterative2:
+    def insertionSortList(self, head):
+        run = new = ListNode(0)
+        while head:
+            if run.val > head.val:
+                run = new
+            while run.next and run.next.val <= head.val:
+                run = run.next
+            run.next, run.next.next, head = head, run.next, head.next
+            # tmp = head
+            # head = head.next
+            # tmp.next = run.next
+            # run.next = tmp
+
+        return new.next
+
+
+class Solution_recursive:
+    def insertionSortList(self, head):
+        dummy = ListNode(0)
+        dummy.next = head
+        return self.helper(head, dummy)
+
+    def helper(self, head, sort):
+        if head is None or head.next is None:
+            return sort.next
+
+        if head.val <= head.next.val:
+            return self.helper(head.next, sort)
+
+        run = sort
+        while run.next.val <= head.next.val:
+            run = run.next
+        run.next, run.next.next, head.next = \
+            head.next, run.next, head.next.next
+        return self.helper(head, sort)
+
+
+class Solution_iterative:
+    def insertionSortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        dummy = ListNode(0)
+        dummy.next = head
+        while head and head.next:
+            if head.val <= head.next.val:
+                head = head.next
+            else:
+                cur = dummy
+                while cur.next.val <= head.next.val:
+                    cur = cur.next
+
+                # nxt = head.next
+                # head.next = head.next.next
+                # nxt.next = cur.next
+                # cur.next = nxt
+
+                cur.next, head.next, cur.next.next = \
+                    head.next, head.next.next, cur.next
+        return dummy.next
