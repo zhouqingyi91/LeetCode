@@ -1,0 +1,33 @@
+# Question url:
+# https://leetcode.com/problems/partition-list/description/
+
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_iterative:
+    def partition(self, head, x):
+        """
+        :type head: ListNode
+        :type x: int
+        :rtype: ListNode
+        """
+        new1 = run1 = ListNode(0)
+        new2 = run2 = ListNode(0)
+        while head:
+            if head.val < x:
+                run1.next = head
+                run1 = run1.next
+            else:
+                run2.next = head
+                run2 = run2.next
+            head = head.next
+
+        run2.next = None
+        run1.next = new2.next
+
+        return new1.next
