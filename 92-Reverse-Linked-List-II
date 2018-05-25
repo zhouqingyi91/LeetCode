@@ -1,0 +1,51 @@
+# Question url:
+# https://leetcode.com/problems/reverse-linked-list-ii/description/
+
+
+# Definition for singly-linked list.
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_reverse_then_concatenate:
+    def reverseBetween(self, head, m, n):
+        pre = dummy = ListNode(0)
+        dummy.next = head
+        for i in range(m - 1):
+            pre = pre.next
+
+        rev = None
+        start = pre.next
+        for i in range(n - m + 1):
+            rev, rev.next, start = start, rev, start.next
+
+        pre.next.next = start
+        pre.next = rev
+        return dummy.next
+
+
+# other's solution
+class Solution_keep_rotate_as_we_traverse:
+    def reverseBetween(self, head, m, n):
+        """
+        :type head: ListNode
+        :type m: int
+        :type n: int
+        :rtype: ListNode
+        """
+        pre = dummy = ListNode(0)
+        dummy.next = head
+        for i in range(m - 1):
+            pre = pre.next
+
+        one = pre.next
+        two = pre.next.next
+        for i in range(n - m):
+            one.next = one.next.next
+            two.next = pre.next
+            pre.next = two
+            two = one.next
+
+        return dummy.next
