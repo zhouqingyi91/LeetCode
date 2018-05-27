@@ -1,0 +1,58 @@
+# Question url:
+# https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/description/
+
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_recursive:
+    def deleteDuplicates(self, head):
+        if head is None or head.next is None:
+            return head
+        if head.val == head.next.val:
+            while head.next and head.val == head.next.val:
+                head = head.next
+            return self.deleteDuplicates(head.next)
+        else:
+            head.next = self.deleteDuplicates(head.next)
+            return head
+
+
+class Solution_revised_iterative:
+    def deleteDuplicates(self, head):
+        pre = dummy = ListNode(0)
+        cur = dummy.next = head
+        while cur:
+            while cur.next and cur.val == cur.next.val:
+                cur = cur.next
+            if pre.next == cur:
+                pre = pre.next
+            else:
+                pre.next = cur.next
+            cur = cur.next
+        return dummy.next
+
+
+class Solution_initial_iterative_solution:
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        distinct = dummy = ListNode(0)
+        dup = head
+        while dup and dup.next:
+            if dup.val == dup.next.val:
+                while dup.next and dup.val == dup.next.val:
+                    dup = dup.next
+                dup = dup.next
+            else:
+                distinct.next = dup
+                distinct = distinct.next
+                dup = dup.next
+        distinct.next = dup
+        return dummy.next
