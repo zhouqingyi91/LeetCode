@@ -1,0 +1,84 @@
+# Question url:
+# https://leetcode.com/problems/copy-list-with-random-pointer/description/
+
+
+# Definition for singly-linked list with a random pointer.
+class RandomListNode(object):
+    def __init__(self, x):
+        self.label = x
+        self.next = None
+        self.random = None
+
+
+class Solution_without_dict(object):
+    def copyRandomList(self, head):
+        run = run2 = run3 = head
+
+        # First round: make copy of each node,
+        # and link them together side-by-side in a single list.
+        while run:
+            tmp = run.next
+            run.next = RandomListNode(run.label)
+            run.next.next = tmp
+            run = run.next.next
+            # run.next, run.next.next, run = RandomListNode(run.label), run.next, run.next
+
+        # Second round: assign random pointers for the copy nodes.
+        while run2:
+            if run2.random:
+                run2.next.random = run2.random.next
+            run2 = run2.next.next
+
+        # Third round: restore the original list, and extract the copy list.
+        cur = dummy = RandomListNode(0)
+        while run3:
+            tmp = run3.next.next
+
+            cur.next = run3.next
+            cur = cur.next
+
+            run3.next = tmp
+            run3 = run3.next
+
+        return dummy.next
+
+
+class Solution_just_store_in_dict(object):
+    def copyRandomList(self, head):
+        copy = {None: None}
+        m = n = head
+        while m:
+            copy[m] = RandomListNode(m.label)
+            m = m.next
+        while n:
+            copy[n].next = copy[n.next]
+            copy[n].random = copy[n.random]
+            n = n.next
+        return copy[head]
+
+
+class Solution_use_table_to_map_relationship(object):
+    def copyRandomList(self, head):
+        """
+        :type head: RandomListNode
+        :rtype: RandomListNode
+        """
+        table = {None: None}
+        cur = dummy = RandomListNode(0)
+        run = head
+        while run:
+            new = RandomListNode(run.label)
+            table[run] = new
+
+            if run.random:
+                if table.get(run.random, 0):
+                    new.random = table[run.random]
+                else:
+                    new.random = RandomListNode(run.random.label)
+                    table[run.random] = new.random
+
+            cur.next = new
+            cur = cur.next
+            run = run.next
+
+        return dummy.next  # or table[head]
