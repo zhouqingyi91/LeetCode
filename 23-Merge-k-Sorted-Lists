@@ -1,0 +1,105 @@
+# Question url:
+# https://leetcode.com/problems/merge-k-sorted-lists/description/
+
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution_PriorityQueue_itertive:
+    def mergeKLists(self, lists):
+        from queue import PriorityQueue
+        run = dummy = ListNode(0)
+        q = PriorityQueue()
+        for node in lists:
+            if node:
+                q.put((node.val, node))
+        while q:
+            run.next = q.get()[1]
+            run = run.next
+            if run.next:
+                q.put((run.next.val, run.next))
+        return dummy.next
+
+
+class Solution_mergeSort_iterative:
+    def mergeKLists(self, lists):
+        length = len(lists)
+        interval = 1
+        while interval < length:
+            for i in range(0, length - interval, interval * 2):
+                lists[i] = self.merge(lists[i], lists[i + interval])
+            interval *= 2
+        return lists if len(lists) == 0 else lists[0]
+
+    def merge(self, left, right):
+        run = dummy = ListNode(0)
+        while left and right:
+            if left.val <= right.val:
+                run.next = left
+                left = left.next
+            else:
+                run.next = right
+                right = right.next
+            run = run.next
+        run.next = left or right
+        return dummy.next
+
+
+class Solution_mergeSort_recursive:
+    def mergeKLists(self, lists):
+        if len(lists) == 0:
+            return None
+        return self.helper(lists, 0, len(lists) - 1)
+
+    def helper(self, lists, lo, hi):
+        if lo == hi:
+            return lists[lo]
+        mid = lo + (hi - lo) // 2
+        l1 = self.helper(lists, lo, mid)
+        l2 = self.helper(lists, mid + 1, hi)
+        return self.merge(l1, l2)
+
+    def merge(self, left, right):
+        if not left or not right:
+            return left or right
+        if left.val <= right.val:
+            left.next = self.merge(left.next, right)
+            return left
+        right.next = self.merge(left, right.next)
+        return right
+
+
+class Solution_initial_recursive:
+    def mergeKLists(self, lists):
+        """
+        :type lists: List[ListNode]
+        :rtype: ListNode
+        """
+        if len(lists) < 2:
+            try:
+                return lists[0]
+            except Exception as e:
+                print(e)
+                return None
+
+        left = self.mergeKLists(lists[:len(lists) // 2])
+        right = self.mergeKLists(lists[len(lists) // 2:])
+
+        return self.merge(left, right)
+
+    def merge(self, left, right):
+        run = dummy = ListNode(0)
+        while left and right:
+            if left.val <= right.val:
+                run.next = left
+                left = left.next
+            else:
+                run.next = right
+                right = right.next
+            run = run.next
+        run.next = left or right
+        return dummy.next
