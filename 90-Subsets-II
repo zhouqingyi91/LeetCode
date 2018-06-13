@@ -1,0 +1,47 @@
+# Question url:
+# https://leetcode.com/problems/subsets-ii/description/
+
+
+class Solution_concise_iterative:
+    def subsetsWithDup(self, nums):
+        res = [[]]
+        nums.sort()
+        for i in range(len(nums)):
+            if i == 0 or nums[i] != nums[i - 1]:
+                start = len(res)
+            res += [res[j] + [nums[i]] for j in range(len(res) - start, len(res))]
+        return res
+
+
+class Solution_iterative:
+    def subsetsWithDup(self, nums):
+        res = [[]]
+        nums.sort()
+        for i in range(len(nums)):
+            sub = []
+            if i == 0 or nums[i] != nums[i - 1]:
+                start = len(res)
+            for j in range(len(res) - start, len(res)):
+                sub.append(res[j] + [nums[i]])
+            res += sub
+        return res
+
+
+class Solution_recursive:
+    def subsetsWithDup(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.findsubsets(sorted(nums), res, [], 0)
+        return res
+
+    def findsubsets(self, nums, res, path, index):
+        res.append(path.copy())
+        for i in range(index, len(nums)):
+            if i > index and nums[i] == nums[i - 1]:
+                continue
+            path.append(nums[i])
+            self.findsubsets(nums, res, path, i + 1)
+            path.pop()
