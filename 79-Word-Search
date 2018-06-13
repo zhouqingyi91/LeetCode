@@ -1,0 +1,29 @@
+# Question url:
+# https://leetcode.com/problems/word-search/description/
+
+
+class Solution:
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        for row in range(len(board)):
+            for col in range(len(board[0])):
+                if self.dfs(board, row, col, word, set(), 0):
+                    return True
+        return False
+
+    def dfs(self, board, r, c, word, seen, i):
+        if i == len(word):
+            return True
+        if r < 0 or r >= len(board) or c >= len(board[0]) or c < 0 or (r, c) in seen or word[i] != board[r][c]:
+            return False
+        seen.add((r, c))
+        res = (self.dfs(board, r + 1, c, word, seen, i + 1) or
+               self.dfs(board, r - 1, c, word, seen, i + 1) or
+               self.dfs(board, r, c + 1, word, seen, i + 1) or
+               self.dfs(board, r, c - 1, word, seen, i + 1))
+        seen.remove((r, c))
+        return res
