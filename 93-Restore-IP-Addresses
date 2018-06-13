@@ -1,0 +1,58 @@
+# Question url:
+# https://leetcode.com/problems/restore-ip-addresses/description/
+
+
+class Solution_recursive:
+    def restoreIpAddresses(self, s):
+        self.calls = 0
+        res = []
+        self.findIPcombo(s, res, [], 4)
+        print(self.calls)
+        return res
+
+    def findIPcombo(self, s, res, path, index):
+        if index == 0:
+            res.append(''.join(x + '.' for x in path)[:-1])
+        else:
+            for i in range(1, 4):
+                self.calls += 1
+                if i + index - 1 <= len(s) <= i + 3 * (index - 1):
+                    path.append(s[:i])
+                    if i == 1:
+                        self.findIPcombo(s[i:], res, path, index - 1)
+                    elif i == 2 and s[0] != '0':
+                        self.findIPcombo(s[i:], res, path, index - 1)
+                    elif i == 3 and s[0] != '0' and int(s[:i]) <= 255:
+                        self.findIPcombo(s[i:], res, path, index - 1)
+                    path.pop()
+
+
+class Solution_recursive_dfs:
+    def restoreIpAddresses(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        if len(s) < 4 or len(s) > 12 or not s:
+            return []
+        res = []
+        self.findIPcombo(s, res, [], 0)
+        return res
+
+    def findIPcombo(self, s, res, path, index):
+        if index == 4 and not s:
+            res.append(''.join(x + '.' for x in path)[:-1])
+            return
+        elif index == 4 or not s:
+            return
+        else:
+            for i in range(1, 4):
+                if i <= len(s):
+                    path.append(s[:i])
+                    if i == 1:
+                        self.findIPcombo(s[i:], res, path, index + 1)
+                    elif i == 2 and s[0] != '0':
+                        self.findIPcombo(s[i:], res, path, index + 1)
+                    elif i == 3 and s[0] != '0' and int(s[:i]) <= 255:
+                        self.findIPcombo(s[i:], res, path, index + 1)
+                    path.pop()
