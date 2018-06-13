@@ -1,0 +1,101 @@
+# Question url:
+# https://leetcode.com/problems/subsets/description/
+
+
+# Time O(2^n) or O(n * 2^n)? I think O(2^n)
+# Space O(2^n) or O(n * 2^n)? I think O(n * 2^n)
+class Solution_concise_recursive:
+    def subsets(self, nums):
+        res = []
+        self.dfs(nums, res, [], 0)
+        return res
+
+    def dfs(self, nums, res, subset, index):
+        res.append(subset)
+        for i in range(index, len(nums)):
+            self.dfs(nums, res, subset + [nums[i]], i + 1)
+
+
+class Solution_recursive:
+    def subsets(self, nums):
+        res = []
+        self.dfs(nums, res, [], 0)
+        return res
+
+    def dfs(self, nums, res, subset, index):
+        res.append(subset.copy())
+        for i in range(index, len(nums)):
+            subset.append(nums[i])
+            self.dfs(nums, res, subset, i + 1)
+            subset.pop()
+
+
+class Solution_concise_iterative:
+    def subsets(self, nums):
+        res = [[]]
+        for num in nums:
+            res += [item + [num] for item in res]
+        return res
+
+
+class Solution_iterative:
+    def subsets(self, nums):
+        res = [[]]
+        for num in nums:
+            subset = []
+            for item in res:
+                subset.append(item + [num])
+            res += subset
+        return res
+
+
+class Solution_clean_recursive:
+    def subsets(self, nums):
+        ans = []
+        self.helper(nums, ans, [])
+        return ans
+
+    def helper(self, nums, ans, subset):
+        if not nums:
+            ans.append(list(subset))
+        else:
+            # choose/explore without
+            num = nums.pop()
+            self.helper(nums, ans, subset)
+
+            # choose/explore with
+            subset.append(num)
+            self.helper(nums, ans, subset)
+
+            # unchoose
+            nums.append(num)
+            subset.remove(num)
+
+
+class Solution_dirty:
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        ans = []
+        self.helper(nums, ans, [], '')
+        return ans
+
+    def helper(self, nums, ans, subset, indent):
+        print(indent, 'begin', 'nums =', nums, ', subsets = ', subset)
+        if not nums:
+            print(indent, 'return', subset)
+            ans.append(subset.copy())
+        else:
+            num = nums.pop()
+            print(indent, 'without', 'nums', nums, 'subset', subset)
+            self.helper(nums, ans, subset, indent + '   ')
+
+            subset.append(num)
+            print(indent, 'with', 'nums', nums, 'subset', subset)
+            self.helper(nums, ans, subset, indent + '   ')
+
+            nums.append(num)
+            subset.remove(num)
+        print(indent, 'end', 'nums =', nums, ', subsets = ', subset)
