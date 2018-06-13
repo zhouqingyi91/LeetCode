@@ -1,0 +1,27 @@
+# Question url:
+# https://leetcode.com/problems/combinations/description/
+
+
+class Solution_recursive:
+    def combine(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.calls = 0
+        self.findcombo(n, k, res, [], 1)
+        print(self.calls)
+        print(len(res))
+        return res
+
+    def findcombo(self, n, k, res, path, index):
+        if k == 0:
+            res.append(path.copy())
+        else:
+            for i in range(index, n - k + 2):  # n + 1 VS n - k + 2
+                self.calls += 1
+                path.append(i)
+                self.findcombo(n, k - 1, res, path, i + 1)
+                path.pop()
