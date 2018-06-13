@@ -1,0 +1,84 @@
+# Question url:
+# https://leetcode.com/problems/permutations-ii/description/
+
+
+class Solution_iterative:
+    def permuteUnique(self, nums):
+        res = [[]]
+        for num in nums:
+            tmp = []
+            for sub in res:
+                for i in range(len(sub) + 1):
+                    tmp.append(sub[:i] + [num] + sub[i:])
+                    if i < len(sub) and num == sub[i]:
+                        break
+            res = tmp
+        return res
+
+
+class Solution_recursive:
+    def permuteUnique(self, nums):
+        res = []
+        used = [False] * len(nums)
+        self.findpermute(sorted(nums), res, used, [])
+        return res
+
+    def findpermute(self, nums, res, used, tmp):
+        if len(tmp) == len(nums):
+            res.append(tmp.copy())
+            return
+        for i in range(len(nums)):
+            if used[i] or i > 0 and nums[i] == nums[i - 1] and used[i - 1]:
+                continue
+            used[i] = True
+            tmp.append(nums[i])
+            self.findpermute(nums, res, used, tmp)
+            used[i] = False
+            tmp.pop()
+
+
+class Solution_revised_recursive:
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.findcombo(sorted(nums), res, [])
+        return res
+
+    def findcombo(self, nums, res, combo):
+        if not nums:
+            res.append(combo)
+        else:
+            for i in range(len(nums)):
+                if i > 0 and nums[i] == nums[i - 1]:
+                    continue
+                self.findcombo(nums[:i] + nums[i + 1:], res, combo + [nums[i]])
+
+
+class Solution_initial_recursive:
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.findcombo(sorted(nums), res, [])
+        return res
+
+    def findcombo(self, nums, res, combo):
+        if nums == []:
+            if combo in res:
+                return
+            res.append(combo.copy())
+        else:
+            for i in range(len(nums)):
+                num = nums[i]
+                combo.append(num)
+                nums.remove(num)
+
+                self.findcombo(nums, res, combo)
+
+                nums.insert(i, num)
+                combo.pop()
