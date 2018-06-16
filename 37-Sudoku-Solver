@@ -1,0 +1,38 @@
+# Question url:
+# https://leetcode.com/problems/sudoku-solver/description/
+
+
+# TC should be O(9^N) where N is the number of spaces
+class Solution_brute_force:
+    def solveSudoku(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: void Do not return anything, modify board in-place instead.
+        """
+        if not board or len(board) == 0:
+            return
+        self.solve(board)
+
+    def solve(self, board):
+        for row in range(len(board)):
+            for col in range(len(board[0])):
+                if board[row][col] == '.':
+                    for char in '123456789':
+                        if self.isValid(board, row, col, char):
+                            board[row][col] = char
+                            if self.solve(board):
+                                return True
+                            else:
+                                board[row][col] = '.'
+                    return False
+        return True
+
+    def isValid(self, board, row, col, char):
+        for i in range(9):
+            if board[row][i] == char or board[i][col] == char:
+                return False
+        for r in range(3):
+            for c in range(3):
+                if board[row // 3 * 3 + r][col // 3 * 3 + c] == char:
+                    return False
+        return True
